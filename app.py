@@ -269,6 +269,8 @@ def main():
         st.session_state.results = None
     if "analysis" not in st.session_state:
         st.session_state.analysis = None
+    if "last_preset" not in st.session_state:
+        st.session_state.last_preset = "Custom"
 
     # Sidebar for presets and info
     with st.sidebar:
@@ -320,20 +322,34 @@ def main():
     # Main content area
     col1, col2 = st.columns(2)
 
-    # Get preset values
-    identity_a_default = ""
-    identity_b_default = ""
-    sample_text_from_preset = ""
-    if preset_choice != "Custom" and preset_choice in IDENTITY_PRESETS:
-        identity_a_default = IDENTITY_PRESETS[preset_choice]["identity_a"]
-        identity_b_default = IDENTITY_PRESETS[preset_choice]["identity_b"]
-        sample_text_from_preset = IDENTITY_PRESETS[preset_choice].get("sample_text", "")
+    # Detect preset change and update session state
+    if preset_choice != st.session_state.last_preset:
+        st.session_state.last_preset = preset_choice
+        if preset_choice != "Custom" and preset_choice in IDENTITY_PRESETS:
+            st.session_state.identity_a = IDENTITY_PRESETS[preset_choice]["identity_a"]
+            st.session_state.identity_b = IDENTITY_PRESETS[preset_choice]["identity_b"]
+            st.session_state.source_text = IDENTITY_PRESETS[preset_choice].get("sample_text", "").strip()
+        else:
+            # Reset to empty for Custom
+            if "identity_a" not in st.session_state:
+                st.session_state.identity_a = ""
+            if "identity_b" not in st.session_state:
+                st.session_state.identity_b = ""
+            if "source_text" not in st.session_state:
+                st.session_state.source_text = ""
+
+    # Initialize session state for inputs if not present
+    if "identity_a" not in st.session_state:
+        st.session_state.identity_a = ""
+    if "identity_b" not in st.session_state:
+        st.session_state.identity_b = ""
+    if "source_text" not in st.session_state:
+        st.session_state.source_text = ""
 
     with col1:
         st.markdown('<p class="identity-label">Identity A</p>', unsafe_allow_html=True)
         identity_a = st.text_area(
             "Identity A",
-            value=identity_a_default,
             height=120,
             placeholder="e.g., I am a pro-life Catholic who believes...",
             label_visibility="collapsed",
@@ -344,7 +360,6 @@ def main():
         st.markdown('<p class="identity-label">Identity B</p>', unsafe_allow_html=True)
         identity_b = st.text_area(
             "Identity B",
-            value=identity_b_default,
             height=120,
             placeholder="e.g., I am a pro-choice feminist who believes...",
             label_visibility="collapsed",
@@ -354,19 +369,18 @@ def main():
     # Source text
     st.markdown("### Source Text (English)")
 
-    # Load sample text: preset takes priority, then example choice
-    source_text_default = ""
-    if sample_text_from_preset:
-        source_text_default = sample_text_from_preset.strip()
-    elif example_choice != "Custom":
-        source_text_default = load_example_text(example_choice)
+    # Handle example text selection (separate from preset)
+    if example_choice != "Custom":
+        example_text = load_example_text(example_choice)
+        if example_text:
+            st.session_state.source_text = example_text
 
     source_text = st.text_area(
         "Source text",
-        value=source_text_default,
         height=200,
         placeholder="Paste the English text you want to test...",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="source_text"
     )
 
     # Character count warning

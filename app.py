@@ -323,26 +323,30 @@ def main():
     # Get preset values
     identity_a_default = ""
     identity_b_default = ""
+    sample_text_from_preset = ""
     if preset_choice != "Custom" and preset_choice in IDENTITY_PRESETS:
         identity_a_default = IDENTITY_PRESETS[preset_choice]["identity_a"]
         identity_b_default = IDENTITY_PRESETS[preset_choice]["identity_b"]
+        sample_text_from_preset = IDENTITY_PRESETS[preset_choice].get("sample_text", "")
 
     with col1:
         st.markdown('<p class="identity-label">Identity A</p>', unsafe_allow_html=True)
-        identity_a = st.text_input(
+        identity_a = st.text_area(
             "Identity A",
             value=identity_a_default,
-            placeholder="e.g., I am a pro-life Catholic",
+            height=120,
+            placeholder="e.g., I am a pro-life Catholic who believes...",
             label_visibility="collapsed",
             key="identity_a"
         )
 
     with col2:
         st.markdown('<p class="identity-label">Identity B</p>', unsafe_allow_html=True)
-        identity_b = st.text_input(
+        identity_b = st.text_area(
             "Identity B",
             value=identity_b_default,
-            placeholder="e.g., I am a pro-choice feminist",
+            height=120,
+            placeholder="e.g., I am a pro-choice feminist who believes...",
             label_visibility="collapsed",
             key="identity_b"
         )
@@ -350,9 +354,11 @@ def main():
     # Source text
     st.markdown("### Source Text (English)")
 
-    # Load example if selected
+    # Load sample text: preset takes priority, then example choice
     source_text_default = ""
-    if example_choice != "Custom":
+    if sample_text_from_preset:
+        source_text_default = sample_text_from_preset.strip()
+    elif example_choice != "Custom":
         source_text_default = load_example_text(example_choice)
 
     source_text = st.text_area(

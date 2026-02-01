@@ -16,6 +16,8 @@ MODELS = {
     "Claude 3.5 Haiku": "anthropic/claude-3.5-haiku",
     "GPT-4o": "openai/gpt-4o",
     "GPT-4o Mini": "openai/gpt-4o-mini",
+    "Grok 4": "x-ai/grok-4",
+    "Grok 3": "x-ai/grok-3",
     "DeepSeek Chat": "deepseek/deepseek-chat",
     "DeepSeek R1": "deepseek/deepseek-r1",
     "Gemini 2.0 Flash": "google/gemini-2.0-flash-001",

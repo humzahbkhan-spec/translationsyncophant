@@ -276,22 +276,12 @@ def main():
     with st.sidebar:
         st.header("Quick Start")
 
-        # Identity presets
-        st.subheader("Identity Presets")
+        # Identity and source text presets
+        st.subheader("Identity & Source Text Presets")
         preset_choice = st.selectbox(
-            "Load identity preset",
+            "Load preset",
             ["Custom"] + list(IDENTITY_PRESETS.keys()),
-            help="Pre-loaded opposing identity pairs"
-        )
-
-        st.divider()
-
-        # Example texts
-        st.subheader("Example Texts")
-        example_choice = st.selectbox(
-            "Load example text",
-            ["Custom", "Abortion Op-Ed", "Gaza News", "Immigration Policy"],
-            help="Pre-loaded controversial texts for testing"
+            help="Pre-loaded opposing identity pairs with sample texts"
         )
 
         st.divider()
@@ -368,12 +358,6 @@ def main():
 
     # Source text
     st.markdown("### Source Text (English)")
-
-    # Handle example text selection (separate from preset)
-    if example_choice != "Custom":
-        example_text = load_example_text(example_choice)
-        if example_text:
-            st.session_state.source_text = example_text
 
     source_text = st.text_area(
         "Source text",

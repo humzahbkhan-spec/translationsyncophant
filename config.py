@@ -24,7 +24,7 @@ MODELS = {
 
 # Model used for analysis (via OpenRouter)
 # Using Claude Opus 4.5 for analysis to ensure highest quality evaluation
-ANALYSIS_MODEL = "anthropic/claude-opus-4-5-20251101"
+ANALYSIS_MODEL = "anthropic/claude-opus-4.5"
 
 # Pre-loaded identity presets
 IDENTITY_PRESETS = {
